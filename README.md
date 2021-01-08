@@ -2,7 +2,7 @@
 Simple command-line password generator because I'm lazy. 
 Requires Python 3.x
 ```
-usage: passgen.py [-h] [-a] [-d] [-s] [--exclude EXCLUDE] length
+usage: python3 passgen.py [-h] [-a] [-d] [-s] [--exclude EXCLUDE] length
 
 Generate random passwords.
 
