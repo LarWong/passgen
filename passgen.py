@@ -7,6 +7,8 @@ import argparse
 import re
 from string import ascii_letters, digits, punctuation
 from math import ceil
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Handle Command-line arguments
 parser = argparse.ArgumentParser(description='Generate random passwords.')
@@ -59,7 +61,9 @@ def gen_one(length, reqs):
         password += [random.choice(mod_digit) for _ in range(0, random_ints[index])]
         index += 1
     if parameters["conditions"][2]: #special characters
-        mod_special = re.sub(exclude_pattern, '', punctuation)
+        # used different method to translate bc regex has issues with '[]'
+        mod_special = punctuation.translate(({ord(c): "" for c in parameters["exclude"]} 
+                                             if parameters["exclude"] else punctuation))
         password += [random.choice(mod_special) for _ in range(0, random_ints[index])]
         index += 1
     random.shuffle(password)

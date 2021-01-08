@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+usage="Usage: ./passgen [-h] [-a] [-d] [-s] [-x EXCLUDE] [-n <length>]
+
+Generate random passwords.
+
+positional arguments:
+  length             length of the password
+
+optional arguments:
+  -h          show this help message and exit
+  -a          include alphabet, (default: -ads)
+  -d          include digits, (default: -ads)
+  -s          include special symbols (default: -ads)
+  -n          length of password (default: 12)
+  -x EXCLUDE  exclude any symbols in EXCLUDE enclosed with double
+              quotes ex: -x \"!21\", make sure to escape double quotes 
+              if you want to exclude them \\\" (default: None)"
+
+display_help() {
+  echo "$usage"
+  exit 0
+}
+
+###########################
+# Flags for Python Script #
+###########################
+alpha_flag=''
+digit_flag=''
+special_flag=''
+length='12'
+exclude=''
+
+while getopts 'hadsx:n:' flag; do
+  case "${flag}" in
+    h) display_help ;;
+    a) alpha_flag='-a' ;;
+    d) digit_flag='-d' ;;
+    s) special_flag='-s' ;;
+    n) length="${OPTARG}" ;;
+    x) exclude="${OPTARG}" ;;
+    *) display_help ;;
+  esac
+done
+
+if [ -z "$exclude" ]; then
+  python3 passgen.py $alpha_flag $digit_flag $special_flag $length
+else
+  python3 passgen.py $alpha_flag $digit_flag $special_flag --exclude $exclude $length
+fi
