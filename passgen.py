@@ -27,6 +27,10 @@ parser.add_argument("length",
                     type=int)
 args = parser.parse_args()
 
+if args.length < 1:
+  print("Error: unaccepted length")
+  sys.exit()
+
 decider = args.alpha or args.digit or args.special
 parameters = {"conditions": ([args.alpha, args.digit, args.special] if decider
                               else 3*[True]),
